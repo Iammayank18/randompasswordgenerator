@@ -1,0 +1,18 @@
+.App {
+  font-family: sans-serif;
+  display: "flex";
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+body {
+  background-color: lightblue;
+}
+
+@media only screen and (max-width: 600px) {
+  .App {
+    width: 90%;
+    margin: auto;
+  }
+}
