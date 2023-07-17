@@ -206,48 +206,52 @@ const PasswordGenerator = () => {
         onCancel={() => setShowGeneratedModal(false)}
         footer
       >
-        {storePass?.map((item, i) => (
-          <p key={i}>
-            <CopyToClipboard
-              text={item}
-              onCopy={(text) => {
-                setClipboardForGenerated({
-                  text: text,
-                  copied: true,
-                });
-                setTimeout(() => {
+        {storePass ? (
+          storePass?.map((item, i) => (
+            <p key={i}>
+              <CopyToClipboard
+                text={item}
+                onCopy={(text) => {
                   setClipboardForGenerated({
                     text: text,
-                    copied: false,
+                    copied: true,
                   });
-                }, 700);
-              }}
-            >
-              <button
-                style={{
-                  cursor: "pointer",
-                  backgroundColor:
-                    clipboardForGenerated.copied &&
-                    clipboardForGenerated.text === item
-                      ? "#E3FDFD"
-                      : "",
-                  padding: 6,
-                  border: "1px solid #71C9CE",
-                  borderRadius: 5,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  setTimeout(() => {
+                    setClipboardForGenerated({
+                      text: text,
+                      copied: false,
+                    });
+                  }, 700);
                 }}
-                className="clipButton"
               >
-                {clipboardForGenerated.copied &&
-                item === clipboardForGenerated.text
-                  ? "copied"
-                  : item}
-                <AiOutlineCopy />
-              </button>
-            </CopyToClipboard>
-          </p>
-        ))}
+                <button
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor:
+                      clipboardForGenerated.copied &&
+                      clipboardForGenerated.text === item
+                        ? "#E3FDFD"
+                        : "",
+                    padding: 6,
+                    border: "1px solid #71C9CE",
+                    borderRadius: 5,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                  className="clipButton"
+                >
+                  {clipboardForGenerated.copied &&
+                  item === clipboardForGenerated.text
+                    ? "copied"
+                    : item}
+                  <AiOutlineCopy />
+                </button>
+              </CopyToClipboard>
+            </p>
+          ))
+        ) : (
+          <h3>No password found</h3>
+        )}
       </Modal>
     </div>
   );
