@@ -119,19 +119,20 @@ const PasswordGenerator = () => {
             flexDirection: "column",
             alignItems: "baseline",
             marginBlock: 20,
+            gap: 10,
           }}
         >
           <Checkbox onChange={(e) => setIncludeSpecialChars(e.target.checked)}>
-            Include Special Characters
+            Include Special Characters <b>(!,@,#,$,%,^,&,*)</b>
           </Checkbox>
           <Checkbox onChange={(e) => setIncludeUppercase(e.target.checked)}>
-            Include Uppercase Letters
+            Include Uppercase Letters <b>(A to Z)</b>
           </Checkbox>
           <Checkbox onChange={(e) => setIncludeLowercase(e.target.checked)}>
-            Include Lowercase Letters
+            Include Lowercase Letters <b>(a to z)</b>
           </Checkbox>
           <Checkbox onChange={(e) => setIncludeNumbers(e.target.checked)}>
-            Include Numbers
+            Include Numbers <b>(0 to 9)</b>
           </Checkbox>
         </div>
         <Button
