@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Checkbox, Button, Slider, Card, Modal, Input } from "antd";
 import Lottie from "react-lottie";
 import strongPass from "./strong.json";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { AiOutlineCopy } from "react-icons/ai";
 const PasswordGenerator = () => {
   const defaultOptions = {
     loop: true,
@@ -20,11 +22,17 @@ const PasswordGenerator = () => {
   const [generatedPassword, setGeneratedPassword] = useState("");
   const [generatingPass, setGeneratingPass] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [showGeneratedModal, setShowGeneratedModal] = useState(false);
   const [storePass, setstoredPass] = useState([]);
-  const [copiedStore, setCopiedStore] = useState(false);
-  const [copiedStoreData, setCopiedStoreData] = useState("");
+
+  const [copyClipboard, setCopyClipboard] = useState({
+    text: "",
+    copied: false,
+  });
+  const [clipboardForGenerated, setClipboardForGenerated] = useState({
+    text: "",
+    copied: false,
+  });
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -70,27 +78,25 @@ const PasswordGenerator = () => {
   useEffect(() => {
     setstoredPass(JSON.parse(localStorage.getItem("generated_pass")));
   }, [showGeneratedModal]);
+  console.log(copyClipboard);
   return (
-    <>
-      <Card
-        title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2>Password Generator</h2>
-            <Button type="link" onClick={() => setShowGeneratedModal(true)}>
-              Show generated
-            </Button>
-          </div>
-        }
-        bordered={false}
+    <div>
+      <div
         style={{
-          width: 500,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 10,
         }}
+      >
+        <Button type="link" onClick={() => setShowGeneratedModal(true)}>
+          🔥 Show generated password
+        </Button>
+      </div>
+      <Card
+        title={<h2>Password Generator</h2>}
+        bordered={false}
+        className="card"
       >
         <p
           style={{
@@ -154,19 +160,7 @@ const PasswordGenerator = () => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={[
-          <Button
-            onClick={() => {
-              navigator.clipboard.writeText(generatedPassword);
-              setCopied(true);
-              setTimeout(() => {
-                setCopied(false);
-              }, 1000);
-            }}
-          >
-            {copied ? "copied" : "copy"}
-          </Button>,
-        ]}
+        footer
       >
         <div
           style={{
@@ -177,11 +171,32 @@ const PasswordGenerator = () => {
           <h2>Strong One!</h2>
         </div>
 
-        <Input
-          placeholder="Basic usage"
-          size="large"
-          value={generatedPassword}
-        />
+        <CopyToClipboard
+          text={generatedPassword}
+          onCopy={(text) => {
+            setCopyClipboard({
+              text: text,
+              copied: true,
+            });
+            setTimeout(() => {
+              setCopyClipboard({
+                text: text,
+                copied: false,
+              });
+            }, 700);
+          }}
+        >
+          <button
+            className="clipButton"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            {copyClipboard.copied ? "copied" : generatedPassword}
+            <AiOutlineCopy />
+          </button>
+        </CopyToClipboard>
       </Modal>
 
       <Modal
@@ -191,31 +206,50 @@ const PasswordGenerator = () => {
         onCancel={() => setShowGeneratedModal(false)}
         footer
       >
-        {storePass.map((item, i) => (
-          <p
-            key={i}
-            onClick={(e) => {
-              setCopiedStore(true);
-              navigator.clipboard.writeText(e.target.innerText);
-              setCopiedStoreData(e.target.innerText);
-              setTimeout(() => {
-                setCopiedStore(false);
-              }, 500);
-            }}
-            style={{
-              cursor: "pointer",
-              backgroundColor:
-                copiedStore && copiedStoreData === item ? "#A6E3E9" : "",
-              padding: 5,
-              border: "1px solid #71C9CE",
-              borderRadius: 5,
-            }}
-          >
-            {item}
+        {storePass?.map((item, i) => (
+          <p key={i}>
+            <CopyToClipboard
+              text={item}
+              onCopy={(text) => {
+                setClipboardForGenerated({
+                  text: text,
+                  copied: true,
+                });
+                setTimeout(() => {
+                  setClipboardForGenerated({
+                    text: text,
+                    copied: false,
+                  });
+                }, 700);
+              }}
+            >
+              <button
+                style={{
+                  cursor: "pointer",
+                  backgroundColor:
+                    clipboardForGenerated.copied &&
+                    clipboardForGenerated.text === item
+                      ? "#E3FDFD"
+                      : "",
+                  padding: 6,
+                  border: "1px solid #71C9CE",
+                  borderRadius: 5,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+                className="clipButton"
+              >
+                {clipboardForGenerated.copied &&
+                item === clipboardForGenerated.text
+                  ? "copied"
+                  : item}
+                <AiOutlineCopy />
+              </button>
+            </CopyToClipboard>
           </p>
         ))}
       </Modal>
-    </>
+    </div>
   );
 };
 
