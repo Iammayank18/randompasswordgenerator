@@ -16,7 +16,7 @@ const PasswordGenerator = () => {
     },
   };
 
-  const [length, setLength] = useState(8);
+  const [length, setLength] = useState(16);
   const [includeUppercase, setIncludeUppercase] = useState(false);
   const [includeLowercase, setIncludeLowercase] = useState(false);
   const [includeNumbers, setIncludeNumbers] = useState(false);
@@ -112,10 +112,12 @@ const PasswordGenerator = () => {
             margin: 0,
           }}
         >
-          Password length
+          Password length:
+          <b> {length}</b>
         </p>
         <Slider
-          defaultValue={10}
+          tooltip={<></>}
+          defaultValue={length}
           max={30}
           onChange={(e) => setLength(e)}
           railStyle={{
