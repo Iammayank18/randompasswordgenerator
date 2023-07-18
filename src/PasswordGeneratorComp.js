@@ -4,6 +4,8 @@ import Lottie from "react-lottie";
 import strongPass from "./strong.json";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { AiOutlineCopy } from "react-icons/ai";
+import { PiSmileySadLight } from "react-icons/pi";
+import { FaSadCry } from "react-icons/fa";
 const PasswordGenerator = () => {
   const defaultOptions = {
     loop: true,
@@ -15,15 +17,22 @@ const PasswordGenerator = () => {
   };
 
   const [length, setLength] = useState(8);
-  const [includeUppercase, setIncludeUppercase] = useState(true);
-  const [includeLowercase, setIncludeLowercase] = useState(true);
-  const [includeNumbers, setIncludeNumbers] = useState(true);
+  const [includeUppercase, setIncludeUppercase] = useState(false);
+  const [includeLowercase, setIncludeLowercase] = useState(false);
+  const [includeNumbers, setIncludeNumbers] = useState(false);
   const [includeSpecialChars, setIncludeSpecialChars] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
   const [generatingPass, setGeneratingPass] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showGeneratedModal, setShowGeneratedModal] = useState(false);
   const [storePass, setstoredPass] = useState([]);
+
+  console.log(
+    "Lower=> " + includeLowercase,
+    "Number=> " + includeNumbers,
+    "special=> " + includeSpecialChars,
+    "Upper => " + includeUppercase
+  );
 
   const [copyClipboard, setCopyClipboard] = useState({
     text: "",
@@ -78,7 +87,7 @@ const PasswordGenerator = () => {
   useEffect(() => {
     setstoredPass(JSON.parse(localStorage.getItem("generated_pass")));
   }, [showGeneratedModal]);
-  console.log(copyClipboard);
+
   return (
     <div>
       <div
@@ -142,6 +151,12 @@ const PasswordGenerator = () => {
           </Checkbox>
         </div>
         <Button
+          disabled={
+            !includeLowercase &&
+            !includeNumbers &&
+            !includeSpecialChars &&
+            !includeUppercase
+          }
           type="primary"
           loading={generatingPass}
           onClick={handleGenerate}
@@ -250,7 +265,20 @@ const PasswordGenerator = () => {
             </p>
           ))
         ) : (
-          <h3>No password found</h3>
+          <div
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <FaSadCry size={30} color="#3FC1C9" />
+            <h3
+              style={{
+                margin: 0,
+              }}
+            >
+              No password found
+            </h3>
+          </div>
         )}
       </Modal>
     </div>
